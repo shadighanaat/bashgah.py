@@ -1,44 +1,57 @@
-# import all methods and classes from the tkinter 
-# import mysql.connector classes
 from tkinter import *
 import mysql.connector
+from dotenv import load_dotenv
+import os  
 
-#Functions
+load_dotenv()
+
 def Add():
-
     name  = label_namefield.get()
     age = label_agefield.get()
     height = label_heightfield.get()
-    wegiht = label_wegihtfield.get()
-      
-    print(name , age , height , wegiht)
-   
+    weight = label_wegihtfield.get()
+
+
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password=os.getenv("PASWORD_DATABASE"),
+        database=os.getenv("NAME_DATABASE")
+    )
+
+    mycursor = mydb.cursor()
+
+    sql = "INSERT INTO customers (name, age, height, weight) VALUES (%s, %s, %s, %s)"
+    val = (name, age, height, weight)
+
+    mycursor.execute(sql, val)
+    mydb.commit()
+
+    print(f"{mycursor.rowcount} record inserted.")
+    label_namefield.delete(0, END) 
 
 def Clear():
-    label_namefield.delete(0,END)
+    label_namefield.delete(0, END)
 
 def Show():
-  mydb = mysql.connector.connect(
-  host="localhost",
-  user="root",
-  password="parhamroham",
-  database="bashgah"
-)
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password=os.getenv("PASWORD_DATABASE"),
+        database="bashgah"
+    )
 
-  mycursor = mydb.cursor()
+    mycursor = mydb.cursor()
 
-  mycursor.execute("SELECT * FROM customers")
+    mycursor.execute("SELECT * FROM customers")
 
-  myresult = mycursor.fetchall()
+    myresult = mycursor.fetchall()
 
-  for x in myresult:
-   print(x)
-   
-# Create a window 
+    for x in myresult:
+        print(x)
+
 window = Tk()
-
 window.title("Club members")
-
 window.geometry()
 
 #create labale name,age,height,wegiht
@@ -91,4 +104,4 @@ btn2.grid(row=3,column=2)
 btn3.grid(row=3,column=4)
 
 #start the window 
-window.mainloop()     
+window.mainloop()   

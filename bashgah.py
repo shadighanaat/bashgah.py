@@ -38,7 +38,7 @@ def Show():
         host="localhost",
         user="root",
         password=os.getenv("PASWORD_DATABASE"),
-        database="bashgah"
+        database=os.getenv("NAME_DATABASE")
     )
 
     mycursor = mydb.cursor()
